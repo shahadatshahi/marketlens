@@ -1,1 +1,4 @@
 # MarketLens has no secrets in source — API key is stored in chrome.storage.local.
+
+# Local-only tracking notes, never pushed
+EVIDENCE_TRAIL.md
