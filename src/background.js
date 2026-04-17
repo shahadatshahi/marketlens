@@ -10,7 +10,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   async function analyseChart(screenshotUrl) {
     // Convert screenshot URL to base64
     const base64Image = screenshotUrl.split(',')[1];
-  
+
+    // Load API key from chrome.storage.local (set via the options page)
+    const { anthropicApiKey } = await chrome.storage.local.get(['anthropicApiKey']);
+    if (!anthropicApiKey) {
+      throw new Error('No API key set. Open MarketLens settings and add your Anthropic API key.');
+    }
+
     const prompt = `You are an expert forex and crypto day trader. Analyse this TradingView chart screenshot.
   
   Focus on:
@@ -24,7 +30,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   - A clear signal: BUY, SELL, or HOLD
   - Confidence level: 0.0 to 1.0
   - Brief reasoning (2-3 sentences max)
-  
   Reply ONLY in this exact JSON format:
   {
     "signal": "BUY",
@@ -36,9 +41,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': 'YOUR_API_KEY_HERE',
-        'anthropic-version': '2023-06-01'
-      },
+        'x-api-key': anthropicApiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+    },
       body: JSON.stringify({
         model: 'claude-opus-4-6',
         max_tokens: 300,
