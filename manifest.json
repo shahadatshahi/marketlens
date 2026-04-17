@@ -12,7 +12,8 @@
 ],
     "host_permissions": [
     "https://www.tradingview.com/*",
-    "https://api.anthropic.com/*"
+    "https://api.anthropic.com/*",
+    "<all_urls>"
 ],
     "content_scripts": [
       {

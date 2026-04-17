@@ -30,8 +30,9 @@ document.getElementById('analyseBtn').addEventListener('click', async () => {
   
       status.textContent = 'Taking screenshot...';
   
-      // Capture screenshot of the current tab
-      const screenshotUrl = await chrome.tabs.captureVisibleTab(null, {
+      // Capture screenshot of the active tab's window.
+      // Passing windowId explicitly is required from a side panel context.
+      const screenshotUrl = await chrome.tabs.captureVisibleTab(tab.windowId, {
         format: 'png'
       });
   
