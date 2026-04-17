@@ -1,3 +1,10 @@
+// Open the side panel when the user clicks the toolbar icon.
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.sidePanel
+    .setPanelBehavior({ openPanelOnActionClick: true })
+    .catch((err) => console.error('sidePanel.setPanelBehavior failed', err));
+});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'analyseChart') {
       analyseChart(message.screenshot)

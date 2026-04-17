@@ -6,7 +6,6 @@
   <title>MarketLens</title>
   <style>
     body {
-      width: 320px;
       font-family: 'Segoe UI', sans-serif;
       background: #0d1117;
       color: #e6edf3;
@@ -16,8 +15,27 @@
     .header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 16px;
     }
+    .header-controls {
+      display: flex;
+      gap: 6px;
+    }
+    .icon-btn {
+      background: transparent;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+    }
+    .icon-btn:hover { background: #161b22; color: #e6edf3; }
+    body.minimized #content { display: none; }
     .logo {
       font-size: 20px;
       font-weight: 700;
@@ -90,8 +108,13 @@
       <div class="logo">🔍 MarketLens</div>
       <div class="subtitle">AI-powered chart analysis</div>
     </div>
+    <div class="header-controls">
+      <button class="icon-btn" id="minimizeBtn" title="Minimize">–</button>
+      <button class="icon-btn" id="closeBtn" title="Close">×</button>
+    </div>
   </div>
 
+  <div id="content">
   <div class="signal-box">
     <div class="signal-label">Signal</div>
     <div class="signal-value HOLD" id="signal">--</div>
@@ -104,7 +127,8 @@
 
   <button class="analyse-btn" id="analyseBtn">🔍 Analyse Chart</button>
   <div class="status" id="status">Ready</div>
+  </div>
 
-  <script src="src/popup.js"></script>
+  <script src="popup.js"></script>
 </body>
 </html>

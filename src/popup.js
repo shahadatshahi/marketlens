@@ -1,3 +1,11 @@
+// Side-panel header controls
+document.getElementById('minimizeBtn').addEventListener('click', () => {
+  document.body.classList.toggle('minimized');
+});
+document.getElementById('closeBtn').addEventListener('click', () => {
+  window.close();
+});
+
 document.getElementById('analyseBtn').addEventListener('click', async () => {
     const status = document.getElementById('status');
     const signal = document.getElementById('signal');
