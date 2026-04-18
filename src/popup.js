@@ -11,53 +11,69 @@ document.getElementById('analyseBtn').addEventListener('click', async () => {
     const signal = document.getElementById('signal');
     const confidence = document.getElementById('confidence');
     const reasoning = document.getElementById('reasoning');
-  
+    const loading = document.getElementById('loading');
+    const analyseBtn = document.getElementById('analyseBtn');
+
+    const showLoading = () => {
+      loading.classList.add('active');
+      analyseBtn.disabled = true;
+    };
+    const hideLoading = () => {
+      loading.classList.remove('active');
+      analyseBtn.disabled = false;
+    };
+
+    showLoading();
     status.textContent = 'Capturing chart...';
     signal.textContent = '--';
     confidence.textContent = 'Confidence: --';
     reasoning.textContent = 'Analysing...';
-  
+
     try {
       // Get the active tab
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  
+
       // Check if we're on TradingView
       if (!tab.url.includes('tradingview.com')) {
+        hideLoading();
         status.textContent = 'Please open a TradingView chart first.';
         reasoning.textContent = 'Navigate to TradingView and open a chart, then click Analyse Chart.';
         return;
       }
-  
+
       status.textContent = 'Taking screenshot...';
-  
+
       // Capture screenshot of the active tab's window.
       // Passing windowId explicitly is required from a side panel context.
       const screenshotUrl = await chrome.tabs.captureVisibleTab(tab.windowId, {
         format: 'png'
       });
-  
+
       status.textContent = 'Sending to AI...';
-  
+
       // Send to background script for AI analysis
       const response = await chrome.runtime.sendMessage({
         action: 'analyseChart',
         screenshot: screenshotUrl
       });
-  
+
       if (response.error) {
+        hideLoading();
         status.textContent = 'Error: ' + response.error;
         reasoning.textContent = response.error;
         return;
       }
-  
+
       // Display results
+      hideLoading();
       signal.textContent = response.signal;
       signal.className = 'signal-value ' + response.signal;
       confidence.textContent = 'Confidence: ' + Math.round(response.confidence * 100) + '%';
       reasoning.textContent = response.reasoning;
       status.textContent = 'Analysis complete ✓';
-  
+
     } catch (err) {
+      hideLoading();
       status.textContent = 'Something went wrong.';
       reasoning.textContent = err.message;
     }
